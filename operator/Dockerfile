@@ -1,4 +1,4 @@
-FROM golang:1.16.10-alpine3.14 as builder
+FROM golang:1.24.2-alpine3.21 as builder
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY . ./
 RUN go build
 
 
-FROM alpine:3.14 as output
+FROM alpine:3.21 as output
 COPY --from=builder /app/operator /usr/local/bin/operator
 
 CMD [ "operator" ]
