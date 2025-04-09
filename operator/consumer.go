@@ -58,6 +58,7 @@ func (c *Consumer) consume(ctx context.Context) error {
 			return nil
 
 		case event := <-eventCh:
+
 			// Ignore heartbeats used to keep connection alive
 			if event.IsHeartbeat() {
 				continue
@@ -76,6 +77,8 @@ func (c *Consumer) handleEvent(event *api.Events) {
 	}
 
 	for _, e := range event.Events {
+
+		fmt.Println("==> Event:", e.Type)
 
 		if e.Type != "JobRegistered" && e.Type != "JobDeregistered" {
 			return
