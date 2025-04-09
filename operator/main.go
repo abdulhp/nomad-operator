@@ -21,14 +21,30 @@ func main() {
 func run(args []string) error {
 	fmt.Println("Creating Nomad client...")
 
+	if os.Getenv("NOMAD_SRV_ADDR") == "" {
+		return fmt.Errorf("NOMAD_SRV_ADDR is not set")
+	}
+	if os.Getenv("NOMAD_SRV_SECRET_ID") == "" {
+		return fmt.Errorf("NOMAD_SRV_SECRET_ID is not set")
+	}
+	if os.Getenv("NOMAD_CA_CERT_PATH") == "" {
+		return fmt.Errorf("NOMAD_CA_CERT_PATH is not set")
+	}
+	if os.Getenv("NOMAD_CLIENT_CERT_PATH") == "" {
+		return fmt.Errorf("NOMAD_CLIENT_CERT_PATH is not set")	
+	}
+	if os.Getenv("NOMAD_CLIENT_KEY_PATH") == "" {
+		return fmt.Errorf("NOMAD_CLIENT_KEY_PATH is not set")
+	}
+
 	client, err := api.NewClient(&api.Config{
 		// sandbox local credentials
-		Address:  "https://192.168.58.23:4646",
-		SecretID: "a492b42f-be94-a12d-4b5a-70f7a84f4d4f",
+		Address:  os.Getenv("NOMAD_SRV_ADDR"),
+		SecretID: os.Getenv("NOMAD_SRV_SECRET_ID"),
 		TLSConfig: &api.TLSConfig{
-			CACert:     "nomad99-certs/ca-cert.pem",
-			ClientCert: "nomad99-certs/cli-cert.pem",
-			ClientKey:  "nomad99-certs/cli-key.pem",
+			CACert:     os.Getenv("NOMAD_CA_CERT_PATH"),
+			ClientCert: os.Getenv("NOMAD_CLIENT_CERT_PATH"),
+			ClientKey:  os.Getenv("NOMAD_CLIENT_KEY_PATH"),
 		},
 	})
 
